@@ -29,7 +29,7 @@ export class ReadableFormat implements Format {
 			compact: true
 		};
 
-		this.seperator = this.config.colors ? '='.grey : '=';
+		this.seperator = '=';
 	}
 
 	format(level: LogLevel, message: string, meta?: object) : string {
