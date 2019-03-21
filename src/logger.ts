@@ -31,6 +31,10 @@ export class Logger {
 		this.level = logLevels[config.level || 'info'];
 	}
 
+	logRaw(message: string) {
+		this.output.write(message);
+	}
+
 	log(level: LogLevel, message: string, meta?: object) {
 		if (logLevels[level] <= this.level) {
 			const formatted = this.format.format(level, message, meta);
