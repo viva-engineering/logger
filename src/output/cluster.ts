@@ -1,6 +1,7 @@
 
 import { Writable } from 'stream';
 import { Logger } from '../logger';
+import * as cluster from 'cluster';
 
 interface ClusterOutputMessage {
 	_dest: 'logger',
@@ -22,7 +23,19 @@ export class ClusterOutput extends Writable {
 
 export class ClusterOutputReceiver {
 	constructor(protected readonly logger: Logger) {
-		process.on('message', (message: ClusterOutputMessage) => {
+		// Setup any already existing workers
+		Object.keys(cluster.workers).forEach((key) => {
+			this.setupWorker(cluster.workers[key]);
+		});
+
+		// Listen for new workers so we can set them up
+		cluster.on('online', (worker: cluster.Worker) => {
+			this.setupWorker(worker);
+		});
+	}
+
+	protected setupWorker(worker: cluster.Worker) {
+		worker.on('message', (message: ClusterOutputMessage) => {
 			if (message._dest === 'logger') {
 				this.logger.logRaw(message.message);
 			}

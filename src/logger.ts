@@ -17,18 +17,21 @@ export interface LoggerConfig {
 	[formatConfig: string]: any,
 	output: Writable,
 	format: FormatConstructor,
-	level?: LogLevel
+	level?: LogLevel,
+	meta?: object
 }
 
 export class Logger {
 	protected readonly output: Writable;
 	protected readonly format: Format;
 	protected readonly level: number;
+	protected readonly meta: object;
 
 	constructor(config: LoggerConfig) {
 		this.output = config.output;
 		this.format = new config.format(config);
 		this.level = logLevels[config.level || 'info'];
+		this.meta = config.meta ? Object.freeze(config.meta) : null;
 	}
 
 	logRaw(message: string) {
@@ -37,7 +40,7 @@ export class Logger {
 
 	log(level: LogLevel, message: string, meta?: object) {
 		if (logLevels[level] <= this.level) {
-			const formatted = this.format.format(level, message, meta);
+			const formatted = this.format.format(level, message, this.getMeta(meta));
 
 			this.output.write(formatted + '\n');
 		}
@@ -65,5 +68,17 @@ export class Logger {
 
 	silly(message: string, meta?: object) {
 		this.log('silly', message, meta);
+	}
+
+	protected getMeta(meta?: object) : object {
+		if (! meta) {
+			return this.meta;
+		}
+
+		if (! this.meta) {
+			return meta;
+		}
+
+		return Object.assign({ }, this.meta, meta);
 	}
 }

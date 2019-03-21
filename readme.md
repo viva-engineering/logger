@@ -15,11 +15,14 @@ import { Logger, ReadableFormat, StdoutOutput } from '@viva-eng/logger';
 const logger = new Logger({
 	format: ReadableFormat,
 	output: new StdoutOutput(),
-	colors: true
+	colors: true,
+	level: 'info'
 });
 
 logger.info('Hi there');
 ```
+
+There are 6 logging methods: `error`, `warn`, `info`, `verbose`, `debug`, and `silly`.
 
 ### Outputs
 
