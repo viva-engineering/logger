@@ -1,6 +1,6 @@
 {
   "name": "@viva-eng/logger",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A logger library for node.js",
   "main": "build/index.js",
   "scripts": {
