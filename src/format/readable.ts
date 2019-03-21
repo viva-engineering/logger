@@ -1,7 +1,7 @@
 
 import 'colors';
 import { Format } from './format';
-import { LoggerConfig } from '../logger';
+import { LoggerConfig, LogLevel } from '../logger';
 import { inspect } from 'util';
 
 interface ReadableFormatConfig extends LoggerConfig {
@@ -29,7 +29,7 @@ export class ReadableFormat implements Format {
 		}
 	}
 
-	format(level: string, message: string, meta?: object) : string {
+	format(level: LogLevel, message: string, meta?: object) : string {
 		const timestamp = `[${(new Date).toISOString()}]`;
 		const metaString = this.formatMeta(meta);
 
@@ -52,6 +52,8 @@ export class ReadableFormat implements Format {
 
 			properties.push(`${this.metaKey(key)}=${inspect(value, this.inspectOptions)}`);
 		});
+
+		return properties.join(' ');
 	}
 
 	metaKey(key: string) : string {
