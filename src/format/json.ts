@@ -7,11 +7,14 @@ export class JsonFormat implements Format {
 	constructor(protected readonly config: LoggerConfig) { }
 
 	format(level: string, message: string, meta?: object) : string {
-		const metaObject = Object.assign({ }, meta || { }, {
+		const output = {
+			level,
+			message,
+			meta: meta || { },
 			timestamp: (new Date).toISOString()
-		});
+		}
 
-		return jsonStringify({ level, message, meta: metaObject }, this.replacer);
+		return jsonStringify(output, this.replacer);
 	}
 
 	replacer(key: string, value: any) {
