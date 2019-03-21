@@ -1,32 +1,22 @@
 
-# Install
+An extremely light-weight logger for node.js
+
+### Install
 
 ```bash
-$ npm install --save @celeri/body-parser
+$ npm install --save @viva-eng/logger
 ```
-
-
-
-### Import
-
-#### ES6 Modules
-
-```javascript
-import { bodyParser } from '@celeri/body-parser';
-```
-
-#### CommonJS Modules
-
-```javascript
-const { bodyParser } = require('@celeri/body-parser');
-```
-
-
 
 ### Usage
 
-```javascript
-const parseBody = bodyParser();
+```typescript
+import { Logger, ReadableFormat, StdoutOutput } from '@viva-eng/logger';
 
-serverOrEndpoint.use(parseBody);
+const logger = new Logger({
+	format: ReadableFormat,
+	output: new StdoutOutput(),
+	colors: true
+});
+
+logger.info('Hi there');
 ```
