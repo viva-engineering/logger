@@ -19,6 +19,7 @@ const coloredLevels = {
 
 export class ReadableFormat implements Format {
 	protected readonly inspectOptions: object;
+	protected readonly seperator: string;
 
 	constructor(protected readonly config: ReadableFormatConfig) {
 		this.inspectOptions = {
@@ -26,7 +27,9 @@ export class ReadableFormat implements Format {
 			depth: 1,
 			colors: this.config.colors,
 			compact: true
-		}
+		};
+
+		this.seperator = this.config.colors ? '='.grey : '=';
 	}
 
 	format(level: LogLevel, message: string, meta?: object) : string {
@@ -50,17 +53,9 @@ export class ReadableFormat implements Format {
 		Object.keys(meta).forEach((key) => {
 			const value = meta[key];
 
-			properties.push(`${this.metaKey(key)}=${inspect(value, this.inspectOptions)}`);
+			properties.push(`${key}${this.seperator}${inspect(value, this.inspectOptions)}`);
 		});
 
 		return properties.join(' ');
-	}
-
-	metaKey(key: string) : string {
-		if (this.config.colors) {
-			return key.grey;
-		}
-
-		return key;
 	}
 }
