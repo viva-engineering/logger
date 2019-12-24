@@ -1,7 +1,7 @@
 
-import { Writable } from 'stream';
 import { Logger } from '../logger';
-import * as cluster from 'cluster';
+import { cluster, Writable } from '../shims';
+import { Worker } from 'cluster';
 
 interface ClusterOutputMessage {
 	_dest: 'logger',
@@ -16,7 +16,7 @@ export class ClusterOutput extends Writable {
 		});
 	}
 
-	_write(chunk: string, encoding: string, callback: () => void) : void {
+	_write(chunk: string, encoding: string, callback) : void {
 		process.send({ _dest: 'logger', message: chunk }, callback);
 	}
 }
@@ -29,12 +29,12 @@ export class ClusterOutputReceiver {
 		});
 
 		// Listen for new workers so we can set them up
-		cluster.on('online', (worker: cluster.Worker) => {
+		cluster.on('online', (worker: Worker) => {
 			this.setupWorker(worker);
 		});
 	}
 
-	protected setupWorker(worker: cluster.Worker) {
+	protected setupWorker(worker: Worker) {
 		worker.on('message', (message: ClusterOutputMessage) => {
 			if (message._dest === 'logger') {
 				this.logger.logRaw(message.message);

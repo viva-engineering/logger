@@ -1,5 +1,5 @@
 
-import { Writable } from 'stream';
+import { Writable, WritableStream } from './shims';
 import { FormatConstructor, Format } from './format/format';
 
 export type LogLevel = 'error' | 'warn' | 'info' | 'verbose' | 'debug' | 'silly';
@@ -15,14 +15,14 @@ const logLevels = {
 
 export interface LoggerConfig {
 	[formatConfig: string]: any,
-	output: Writable,
+	output: WritableStream,
 	format: FormatConstructor,
 	level?: LogLevel,
 	meta?: object
 }
 
 export class Logger {
-	protected readonly output: Writable;
+	protected readonly output: WritableStream;
 	protected readonly format: Format;
 	protected readonly level: number;
 	protected readonly meta: object;

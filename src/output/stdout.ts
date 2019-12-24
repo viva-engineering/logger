@@ -9,7 +9,7 @@ export class StdoutOutput extends Writable {
 		});
 	}
 
-	_write(chunk: string, encoding: string, callback: () => void) : void {
+	_write(chunk: string, encoding: string, callback) : void {
 		process.stdout.write(chunk, callback);
 	}
 }
